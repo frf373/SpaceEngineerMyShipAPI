@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGetActionProperty", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCSharp", "TestCSharp\TestCSharp.csproj", "{5C191C79-FFAE-4B17-81EC-A47F4B732FB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngameScriptTest", "IngameScriptTest\IngameScriptTest.csproj", "{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Shared-MyShip\Shared_MyShip.projitems*{61eba249-19f3-48b6-a25b-a4cee90168ba}*SharedItemsImports = 13
@@ -63,6 +65,13 @@ Global
 		{5C191C79-FFAE-4B17-81EC-A47F4B732FB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5C191C79-FFAE-4B17-81EC-A47F4B732FB3}.Release|x64.ActiveCfg = Release|Any CPU
 		{5C191C79-FFAE-4B17-81EC-A47F4B732FB3}.Release|x64.Build.0 = Release|Any CPU
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Debug|x64.ActiveCfg = Debug|x64
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Debug|x64.Build.0 = Debug|x64
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Release|Any CPU.ActiveCfg = Debug|x64
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Release|Any CPU.Build.0 = Debug|x64
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Release|x64.ActiveCfg = Debug|x64
+		{A8944A9E-E580-4710-93BE-B8FDEC6E0AD7}.Release|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
