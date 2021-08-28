@@ -27,7 +27,7 @@ namespace IngameScript
             /// <summary>
             /// 定义好转发规则的Echo,并且有流功能和缓存功能
             /// </summary>
-            protected class Custom_Echo
+            public class Custom_Echo
             {
                 private readonly CustomFuncBase func;
                 public Custom_Echo(CustomFuncBase func)
@@ -40,7 +40,7 @@ namespace IngameScript
                 /// <summary>
                 /// 输出信息缓存计数器
                 /// </summary>
-                public int Echo_CacheCounter { get; set; }
+                private int Echo_CacheCounter { get; set; }
 
                 /// <summary>
                 /// 内容构造器
@@ -61,36 +61,51 @@ namespace IngameScript
                 /// <summary>
                 /// 是否有内容需要刷新出去
                 /// </summary>
-                public bool HasContent => contentBuilder.Length != 0;
+                private bool HasContent => contentBuilder.Length != 0;
 
                 /// <summary>
                 /// Echo内容缓存内容
                 /// </summary>
-                public string Echo_Cache {  get; set; }
+                private string Echo_Cache {  get; set; }
 
                 /// <summary>
-                /// 是否有缓存信息
+                /// 输出Echo缓存并刷新缓存计数器
                 /// </summary>
-                public bool HasEcho_Cache => Echo_CacheCounter != -1;
-
-                /// <summary>
-                /// 刷新并输出Echo流
-                /// </summary>
-                /// <returns>要Echo的消息</returns>
-                public void Echo_Flush()
+                private void Echo_FlushToCache()
                 {
                     //定义转发规则，并且向缓存中输入
                     Echo_Cache = "[" + func.FuncName + "]" + "\n" + contentBuilder.ToString();
+                    if(!Echo_Cache.EndsWith("\n"))Echo_Cache+="\n";
+                    Echo_CacheCounter = 0;
                     contentBuilder.Clear();
                 }
 
                 /// <summary>
-                /// 重置缓存，比如计数器达到指定数字后，Echo不在需要这个信息，常用于某个信息停留在屏幕上一会
+                /// 根据刷新计数器数字，获得Echo缓存
                 /// </summary>
-                public void Reset_Cache()
+                /// <returns>Echo缓存</returns>
+                private string GetEcho_Cache()
                 {
-                    //-1代表无缓存信息
-                    Echo_CacheCounter = -1;
+                    if (Echo_CacheCounter>0&&Echo_CacheCounter<50)
+                    {
+                        Echo_CacheCounter++;
+                    }
+                    else
+                    {
+                        Echo_CacheCounter = -1;
+                        Echo_Cache = "";
+                    }
+                    return Echo_Cache;
+                }
+
+                /// <summary>
+                /// 得到此功能的Echo全功能，并且加上了函数标识符
+                /// </summary>
+                /// <returns></returns>
+                public string GetContent()
+                {
+                    if (HasContent) Echo_FlushToCache();
+                    return GetEcho_Cache();
                 }
             }
             

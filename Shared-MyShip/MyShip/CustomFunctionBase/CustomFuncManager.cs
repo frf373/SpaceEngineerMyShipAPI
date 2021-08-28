@@ -386,13 +386,14 @@ namespace IngameScript
                 FrequencyChangedInfoCaches.Add(new FrequencyChangedInfoCache(this, sender, e));
             }
 
-            public string GetEchoCache()
+            public string GetAllEchoCache()
             {
-                return "";
-            }
-            public void EchoAllCache()
-            {
-
+                StringBuilder builder=new StringBuilder();
+                foreach(CustomFuncBase func in UIDToFunc.Values)
+                {
+                    builder.Append(func.CustomEcho.GetContent());
+                }
+                return builder.ToString();
             }
 
         }

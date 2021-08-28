@@ -224,12 +224,12 @@ namespace IngameScript
             /// <summary>
             /// 自定义Echo流
             /// </summary>
-            protected Custom_Echo _Echo { get; set; }
+            public Custom_Echo CustomEcho { get; set; }
 
             /// <summary>
             /// 定义好的转发规则和缓存功能的Echo
             /// </summary>
-            protected Action<string> Echo => _Echo.Echo_Builder;
+            protected Action<string> Echo => CustomEcho.Echo_Builder;
 
             /// <summary>
             /// 自定义Runtime类
@@ -309,7 +309,7 @@ namespace IngameScript
                 this.UID = uid;
 
                 Runtime = new Custom_Runtime(program,this);
-                _Echo = new Custom_Echo(this);
+                CustomEcho = new Custom_Echo(this);
                 Ini = new MyIni();
             }
 

@@ -164,7 +164,12 @@ namespace IngameScript
             /// <param name="source"></param>
             public void RunAlwaysFunc(string arg,UpdateType source)
             {
-                
+                EchoAll();
+            }
+
+            public void EchoAll()
+            {
+                //Echo(CustomFuncs)
             }
 
             /// <summary>
