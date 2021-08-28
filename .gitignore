@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+#Rough's Exclude Files
+
+/TestCSharp
+/TestGetActionProperty
+/TestGetBlock
+/IngameScriptTest
+/AutoDoor
 # User-specific files
 *.rsuser
 *.suo

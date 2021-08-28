@@ -24,14 +24,37 @@ namespace IngameScript
     {
         abstract public partial class CustomFuncBase
         {
-            /// <summary>
-            /// Echo函数重写，要定义好转发规则
-            /// </summary>
-            /// <param name="content">内容</param>
-            private void Custom_Echo(string content)
+            protected class Custom_Echo
             {
-                program.Echo($"[{UID}][{content}]");
+                private CustomFuncBase func;
+                public Custom_Echo(CustomFuncBase func)
+                {
+                    this.func = func;
+                    Echo_CacheCounter = -1;
+                    contentBuilder=new StringBuilder();
+                }
+
+                /// <summary>
+                /// 输出信息缓存计数器
+                /// </summary>
+                public int Echo_CacheCounter { get; set; }
+
+                private StringBuilder contentBuilder;
+                public void Echo_Builder(string content)
+                {
+                    Echo_CacheCounter = 0;
+                    contentBuilder.Append(content);
+                }
+
+                public bool HasContent => contentBuilder.Length != 0;
+                public string Echo_Flush()
+                {
+                    string content = "[" + func.FuncName + "]" + "\n" + contentBuilder.ToString();
+                    contentBuilder.Clear();
+                    return content;
+                }
             }
+            
         }
     }
 }
