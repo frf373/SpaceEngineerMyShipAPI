@@ -32,7 +32,17 @@
 
 #### MyShipAPI介绍
 
-1.
+1.只需几分钟，就可以合并自己开发的各个脚本，不用担心命名，Runtime等问题
+
+2.统一的功能基类CustomFuncBase，包含各种脚本运行原型等，支持自开发
+
+3.多功能管理器CustomFuncManager，加载删除功能，功能运行权限管理功能等
+
+4.统一的系统基类ShipSystem，支持自开发
+
+5.飞船系统管理ShipSystemCollection
+
+6.完整的飞船终端方块获取，终端块包含在各个飞船系统中，如BatteryBlock在ElectricSystem中，SensorBlock在DetectionSystem中
 
 具体使用方法请见WIKI
 
@@ -63,5 +73,7 @@
 3.新增飞船功能基类，开发使用
 
 4.新增飞船功能原型
+
+5.新增功能Runtime改写类
 
 
