@@ -46,6 +46,9 @@ namespace IngameScript
                     contentBuilder.Append(content);
                 }
 
+                /// <summary>
+                /// 是否有内容需要刷新出去
+                /// </summary>
                 public bool HasContent => contentBuilder.Length != 0;
                 public string Echo_Flush()
                 {
