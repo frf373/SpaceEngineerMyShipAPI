@@ -352,7 +352,7 @@ namespace IngameScript
             }
 
             /// <summary>
-            /// 功能运行状况
+            /// 注意除，CustomBase功能运行状况
             /// </summary>
             public FuncStateArg FuncState {  get; set; }
         }

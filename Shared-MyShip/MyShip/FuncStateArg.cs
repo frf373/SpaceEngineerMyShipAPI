@@ -33,7 +33,7 @@ namespace IngameScript
             /// 代表未注册的功能
             /// </summary>
             None = 0,
-
+            
             /// <summary>
             /// 开启此功能的参数监听，即向此功能传参数是有效的
             /// </summary>

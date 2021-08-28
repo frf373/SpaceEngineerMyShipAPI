@@ -71,10 +71,7 @@ namespace IngameScript
                         //先变更后通知事件发生，防止卡死
                         updateFrequency = value;
                         //通知外界更新频率变了
-                        if (OnUpdateFrequencyChanged != null)
-                        {
-                            OnUpdateFrequencyChanged(customFunc, new UpdateFrequencyChangedEventArgs(previous, value));
-                        }
+                        OnUpdateFrequencyChanged?.Invoke(customFunc, new UpdateFrequencyChangedEventArgs(previous, value));
                     }
                 }
 

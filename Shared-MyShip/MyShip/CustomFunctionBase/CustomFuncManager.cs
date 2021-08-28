@@ -25,6 +25,10 @@ namespace IngameScript
         public class CustomFuncManager
         {
             /// <summary>
+            /// 不运行的功能
+            /// </summary>
+            List<Action<string, UpdateType>> RunNoneActionList { get; set; }
+            /// <summary>
             /// 只运行一次功能表
             /// </summary>
             List<Action<string, UpdateType>> RunOnceActionList { get; set; }
@@ -45,17 +49,26 @@ namespace IngameScript
             /// <summary>
             /// 保存函数表
             /// </summary>
-            List<Action> RunSaveActionList {  get; set; }
+            List<Action> RunSaveActionList { get; set; }
             /// <summary>
             /// 标识符ID到自定函数类的哈希表，防止一个函数注册多次
             /// </summary>
             Hashtable UIDToFunc { get; set; }
 
             /// <summary>
-            /// 更新频率到4钟功能表的哈希表
+            /// 更新频率到5种功能表的哈希表
             /// </summary>
             Hashtable UpdateFrencyToActionList { get; set; }
 
+            /// <summary>
+            /// 功能主函数到功能的哈希表
+            /// </summary>
+            Hashtable FuncMainToFunc {  get; set; }
+
+            /// <summary>
+            /// 功能到功能主函数运行
+            /// </summary>
+            Hashtable FuncToFuncStateArg {  get; set; }
             /// <summary>
             /// 飞船功能接口
             /// </summary>
@@ -65,8 +78,11 @@ namespace IngameScript
                 //this.ship = ship;
 
                 UIDToFunc = new Hashtable();
-
+                FuncMainToFunc = new Hashtable();
+                
                 UpdateFrencyToActionList = new Hashtable();
+
+                RunNoneActionList = new List<Action<string, UpdateType>>();
                 RunOnceActionList = new List<Action<string, UpdateType>>();
                 Run1ActionList = new List<Action<string, UpdateType>>();
                 Run10ActionList = new List<Action<string, UpdateType>>();
@@ -74,33 +90,102 @@ namespace IngameScript
 
                 RunSaveActionList = new List<Action>();
 
+                UpdateFrencyToActionList.Add(UpdateFrequency.None, RunNoneActionList);
                 UpdateFrencyToActionList.Add(UpdateFrequency.Once, RunOnceActionList);
                 UpdateFrencyToActionList.Add(UpdateFrequency.Update1, Run1ActionList);
                 UpdateFrencyToActionList.Add(UpdateFrequency.Update10, Run10ActionList);
                 UpdateFrencyToActionList.Add(UpdateFrequency.Update100, Run100ActionList);
 
                 FrequencyChangedInfoCaches = new List<FrequencyChangedInfoCache>();
+                RunOnceDeletedExceptions = new List<Action<string, UpdateType>> ();
             }
 
 
             /// <summary>
             /// 把自定义功能加载到飞船功能中
             /// </summary>
-            public void ManageFunc(CustomFuncBase customFunc,FuncStateArg managerArg)
+            public void ManageFunc(CustomFuncBase func, FuncStateArg arg)
             {
-
-
-                //Id到这个类
-                UIDToFunc.Add(customFunc.UID, customFunc);
-                //None不考虑
-                if (customFunc.Runtime.UpdateFrequency != UpdateFrequency.None)
+                //如果功能没有注册，进行功能注册
+                if (func.FuncState == FuncStateArg.None && arg != FuncStateArg.None)
                 {
-                    (UpdateFrencyToActionList[customFunc.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Add(customFunc.Main);
+                    //Id到这个类
+                    UIDToFunc.Add(func.UID, func);
+
+                    Action<string, UpdateType> tempMain = func.Main;
+                    //main函数到类
+                    FuncMainToFunc.Add(tempMain, func);
+
+
+                    //注册频率变化时间处理函数
+                    func.Runtime.OnUpdateFrequencyChanged += FuncUpdateFrequencyChangedHandler;
+                    //注册保存函数
+                    RunSaveActionList.Add(func.Save);
+
+                    //相当于仅注册
+                    func.FuncState = FuncStateArg.ToggleAllOff;
                 }
+                //下面不能是else if 因为注册完后还要跳出，并执行真正的参数
 
-                customFunc.Runtime.OnUpdateFrequencyChanged += FuncUpdateFrequencyChangedHandler;
+                //如果注册过，取消注册
+                if (arg == FuncStateArg.None && func.FuncState != FuncStateArg.None)
+                {
+                    UIDToFunc.Remove(func.UID);
 
-                RunSaveActionList.Add(customFunc.Save);
+                    Action<string, UpdateType> tempMain = func.Main;
+                    FuncMainToFunc.Remove(tempMain);
+
+                    //删除循环函数，防止直接从循环状态跳到未注册的时候，函数没删。
+                    //List中移除不存在的东西，没有问题
+                    if (func.Runtime.UpdateFrequency != UpdateFrequency.None)
+                    {
+                        (UpdateFrencyToActionList[func.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Remove(func.Main);
+                    }
+
+                    //删除频率变化时间处理函数
+                    func.Runtime.OnUpdateFrequencyChanged -= FuncUpdateFrequencyChangedHandler;
+                    //删除保存函数
+                    RunSaveActionList.Remove(func.Save);
+
+                    //相当于未注册
+                    func.FuncState = FuncStateArg.None;
+                }
+                else
+                {
+                    //用else if 是为了 过滤同时设置Listening和UnListened，优先取Listening
+                    if (Convert.ToBoolean(arg & FuncStateArg.Listening))
+                    {
+                        //不保留这一位
+                        func.FuncState &= ~FuncStateArg.Unlistened;
+                        //增加这样一位
+                        func.FuncState |= FuncStateArg.Listening;
+                    }
+                    else if (Convert.ToBoolean(arg & FuncStateArg.Unlistened))
+                    {
+                        func.FuncState &= ~FuncStateArg.Listening;
+                        func.FuncState |= FuncStateArg.Unlistened;
+                    }
+                    //else if 与上面同理
+                    //注意，这个功能只是把原本会循环的功能开启循环，原本设置不是循环的函数，即None不会继续循环
+                    //相当于截断循环和恢复截断
+                    //当然经过arg运行后，比如更新频率变为Once,或者其他。打开循环后，会变成RunOnce等
+                    if (Convert.ToBoolean(arg & FuncStateArg.Cycling)&&Convert.ToBoolean(func.FuncState&FuncStateArg.Cycling))
+                    {
+                        //因为变频事件中改List会被Uncycled阻断，应该可以加
+                        (UpdateFrencyToActionList[func.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Add(func.Main);
+                        func.FuncState &= ~FuncStateArg.Uncycled;
+                        func.FuncState |= FuncStateArg.Cycling;
+
+                    }
+                    else if (Convert.ToBoolean(arg & FuncStateArg.Uncycled)&&Convert.ToBoolean(func.FuncState&FuncStateArg.Uncycled))
+                    {
+                        //因为变频事件中改List会被Uncycled阻断，应该可以减
+                        (UpdateFrencyToActionList[func.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Remove(func.Main);
+                        func.FuncState &= ~FuncStateArg.Cycling;
+                        func.FuncState |= FuncStateArg.Uncycled;
+
+                    }
+                }
             }
 
             /// <summary>
@@ -108,7 +193,13 @@ namespace IngameScript
             /// </summary>
             public void RunOnceFunc()
             {
-                RunOnceActionList.ForEach(x => x("", UpdateType.Once));
+                //包含是否允许循环的检查
+                RunOnceActionList.ForEach(x =>
+                {
+                    if (Convert.ToBoolean(
+                      (FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
+                        x("", UpdateType.Once);
+                });
             }
 
             /// <summary>
@@ -116,7 +207,11 @@ namespace IngameScript
             /// </summary>
             public void RunCycle1Func()
             {
-                Run1ActionList.ForEach(x => x("", UpdateType.Update1));
+                Run1ActionList.ForEach(x =>
+                {
+                    if (Convert.ToBoolean((FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
+                        x("", UpdateType.Update1);
+                });
             }
 
             /// <summary>
@@ -124,7 +219,11 @@ namespace IngameScript
             /// </summary>
             public void RunCycle10Func()
             {
-                Run10ActionList.ForEach(x => x("",UpdateType.Update10));
+                Run10ActionList.ForEach(x =>
+                 {
+                     if (Convert.ToBoolean((FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
+                         x("", UpdateType.Update10);
+                 });
             }
 
             /// <summary>
@@ -132,7 +231,11 @@ namespace IngameScript
             /// </summary>
             public void RunCycle100Func()
             {
-                Run100ActionList.ForEach(x=> x("",UpdateType.Update100));
+                Run100ActionList.ForEach(x =>
+                {
+                    if (Convert.ToBoolean((FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
+                        x("", UpdateType.Update100);
+                });
             }
 
             /// <summary>
@@ -140,7 +243,7 @@ namespace IngameScript
             /// </summary>
             public void RunSaveFunc()
             {
-                RunSaveActionList.ForEach(x=>x());
+                RunSaveActionList.ForEach(x => x());
             }
 
             /// <summary>
@@ -163,53 +266,81 @@ namespace IngameScript
             /// <param name="updateSource">更新信息</param>
             public void RunArgFunc(string UID, string arg, UpdateType updateSource)
             {
-                if(UID.Length!=16)
+                if (UID.Length != 16)
                 {
-                    throw new Exception("你的触发器发送的函数UID不是16位\n你发送的UID是:"+UID);
+                    throw new Exception("你的触发器发送的函数UID不是16位\n你发送的UID是:" + UID);
                 }
                 else
                 {
-                    if(UIDToFunc[UID]!=null)
+                    if (UIDToFunc[UID] != null)
                     {
-                        (UIDToFunc[UID] as CustomFuncBase)?.Main(arg, updateSource);
+                        CustomFuncBase func = UIDToFunc[UID] as CustomFuncBase;
+                        if (Convert.ToBoolean(func.FuncState & FuncStateArg.Listening))
+                        {
+                            func?.Main(arg, updateSource);
+                        }
+                        else
+                        {
+                            throw new Exception("你的功能未开启参数监听\n你发送的UID是:" + UID);
+                        }
+
                     }
                     else
                     {
-                        throw new Exception("你的触发器发送的UID不正确\n你发送的UID是:"+UID);
+                        throw new Exception("你的触发器发送的UID不正确\n你发送的UID是:" + UID);
                     }
                 }
             }
-
+            private List<Action<string,UpdateType>> RunOnceDeletedExceptions {  get; set; }
             /// <summary>
             /// 从缓存信息中更新功能运行频率，防止直接更新后破坏List的枚举器
             /// </summary>
             public void UpdateFuncFrequency()
             {
-                //自动清空Once列表
-                RunOnceActionList.Clear();
-
                 if (FrequencyChangedInfoCaches.Count != 0)
                 {
                     foreach (var cache in FrequencyChangedInfoCaches)
-                    {
-                        CustomFuncBase customFunc = cache.sender as CustomFuncBase;
-                        Action<string, UpdateType> MainAction = (UIDToFunc[customFunc.UID] as CustomFuncBase).Main;
-
-                        //None不用减，Once已经自动清空
-                        if (cache.e.previous != UpdateFrequency.Once && cache.e.previous != UpdateFrequency.None)
+                    {  
+                        //如果是不允许循环，则直接跳过，因为RunActionList中都没有
+                        if(Convert.ToBoolean((cache.sender as CustomFuncBase).FuncState & FuncStateArg.Uncycled))
                         {
-                            (UpdateFrencyToActionList[cache.e.previous] as List<Action<string, UpdateType>>).Remove(MainAction);
-                        }
-                        //None不能加
-                        if (cache.e.now != UpdateFrequency.None)
-                        {
-                            (UpdateFrencyToActionList[cache.e.now] as List<Action<string, UpdateType>>).Add(MainAction);
+                            //如果是Once->Once，加入删除例外列表中
+                            if (cache.e.previous == UpdateFrequency.Once && cache.e.now == UpdateFrequency.Once)
+                            {
+                                RunOnceDeletedExceptions.Add((cache.sender as CustomFuncBase).Main);
+                            }
+                            //如果以前和现在一样，则跳过，节省时间
+                            if (cache.e.previous != cache.e.now)
+                            {////////////////////////////////////////////////Uncycle，不要剪
+                                CustomFuncBase customFunc = cache.sender as CustomFuncBase;
+                                Action<string, UpdateType> MainAction = (UIDToFunc[customFunc.UID] as CustomFuncBase).Main;
+                                (UpdateFrencyToActionList[cache.e.previous] as List<Action<string, UpdateType>>).Remove(MainAction);
+                                (UpdateFrencyToActionList[cache.e.now] as List<Action<string, UpdateType>>).Add(MainAction);
+                            }
                         }
                     }
+
+                    //清空缓存列表
+                    FrequencyChangedInfoCaches.Clear();
                 }
 
-                //清空缓存列表
-                FrequencyChangedInfoCaches.Clear();
+                //如果运行一次没调整完全，手动调整，比如：Once->Update10会减少，但是如果Once没变化就要删除，要考虑Once->Once会放在例外列表中，不变化频率
+                if(RunOnceActionList.Count != 0)
+                {
+                    foreach (var action in RunOnceActionList)
+                    {
+                        //如果例外列表中为0，直接更新频率，加快速度
+                        if(RunOnceDeletedExceptions.Count==0||!RunOnceDeletedExceptions.Contains(action))
+                        {
+                            //手动调为None，此时会有更新频率变化的事件产生
+                            (FuncMainToFunc[action] as CustomFuncBase).Runtime.UpdateFrequency = UpdateFrequency.None;
+                        }
+                    }
+                    //清空例外
+                    RunOnceDeletedExceptions.Clear();
+                    //重新加载
+                    UpdateFuncFrequency();
+                }
             }
 
             /// <summary>
@@ -268,10 +399,9 @@ namespace IngameScript
             }
             public void EchoAllCache()
             {
-                
+
             }
 
-            
         }
     }
 }

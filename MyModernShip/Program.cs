@@ -47,7 +47,7 @@ namespace IngameScript
             {
                 ship.RunArgFunc(arg, source);
             }
-            //比如输出Echo流中所有内容
+            //比如输出Echo流中所有内容，日志
             ship.RunAlwaysFunc(arg, source);
         }
     }
