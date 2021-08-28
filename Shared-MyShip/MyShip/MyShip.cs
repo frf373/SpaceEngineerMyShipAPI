@@ -102,7 +102,7 @@ namespace IngameScript
                 this.Language = Language.Chinese;
 
                 ShipSystems = new ShipSystemCollection(this);
-                CustomFuncs = new CustomFuncManager(this);
+                CustomFuncs = new CustomFuncManager();
 
                 CycleCount = 0;
             }

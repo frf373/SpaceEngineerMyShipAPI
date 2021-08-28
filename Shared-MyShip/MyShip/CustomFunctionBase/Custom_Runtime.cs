@@ -36,9 +36,9 @@ namespace IngameScript
                     updateFrequency = UpdateFrequency.None;
                 }
 
-                private Program program;
+                private readonly Program program;
 
-                private CustomFuncBase customFunc;
+                private readonly CustomFuncBase customFunc;
                 public TimeSpan TimeSinceLastRun => program.Runtime.TimeSinceLastRun;
 
                 public double LastRunTimeMs => program.Runtime.LastRunTimeMs;

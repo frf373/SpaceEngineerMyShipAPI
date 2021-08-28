@@ -15,7 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_IGC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoDoorFunc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\FuncStateArg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\FuncRunPermission.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\DoorSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoLevel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoPanelSystem.cs" />

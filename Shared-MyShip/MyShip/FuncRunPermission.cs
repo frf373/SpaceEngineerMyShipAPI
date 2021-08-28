@@ -24,10 +24,10 @@ namespace IngameScript
     {
 
         /// <summary>
-        /// 功能运行状态参数
+        /// 功能运行权限参数
         /// </summary>
         [Flags]
-        public enum FuncStateArg
+        public enum FuncRunPermission
         {
             /// <summary>
             /// 代表未注册的功能

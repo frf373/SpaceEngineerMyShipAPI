@@ -36,9 +36,9 @@ namespace IngameScript
             /// </summary>
             public static readonly string custom_Separator_End = "#+-*/#";
 
-            private Program program;
+            private readonly Program program;
 
-            private MyShip ship;
+            private readonly MyShip ship;
 
             /// <summary>
             /// 飞船系统接口
@@ -311,9 +311,6 @@ namespace IngameScript
                 Runtime = new Custom_Runtime(program,this);
                 _Echo = new Custom_Echo(this);
                 Ini = new MyIni();
-
-                //功能未注册
-                FuncState = FuncStateArg.None;
             }
 
             /// <summary>
@@ -352,9 +349,9 @@ namespace IngameScript
             }
 
             /// <summary>
-            /// 注意除，CustomBase功能运行状况
+            /// 注意除，CustomBase功能运行权限
             /// </summary>
-            public FuncStateArg FuncState {  get; set; }
+            //public FuncRunPermission FuncState {  get; set; }
         }
     }
 }

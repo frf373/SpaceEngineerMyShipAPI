@@ -66,20 +66,17 @@ namespace IngameScript
             Hashtable FuncMainToFunc {  get; set; }
 
             /// <summary>
-            /// 功能到功能主函数运行
+            /// 功能类到功能运行权限
             /// </summary>
-            Hashtable FuncToFuncStateArg {  get; set; }
-            /// <summary>
-            /// 飞船功能接口
-            /// </summary>
-            //private MyShip ship;
-            public CustomFuncManager(MyShip ship)
+            Hashtable FuncToFuncRunPermission {  get; set; }
+
+            public CustomFuncManager()
             {
-                //this.ship = ship;
 
                 UIDToFunc = new Hashtable();
                 FuncMainToFunc = new Hashtable();
-                
+                FuncToFuncRunPermission = new Hashtable();
+
                 UpdateFrencyToActionList = new Hashtable();
 
                 RunNoneActionList = new List<Action<string, UpdateType>>();
@@ -100,14 +97,22 @@ namespace IngameScript
                 RunOnceDeletedExceptions = new List<Action<string, UpdateType>> ();
             }
 
-
             /// <summary>
             /// 把自定义功能加载到飞船功能中
             /// </summary>
-            public void ManageFunc(CustomFuncBase func, FuncStateArg arg)
+            public void ManageFunc(CustomFuncBase func, FuncRunPermission permission)
             {
+                //如果没有这个权限，自动生成一个未注册的权限
+                if(!FuncToFuncRunPermission.ContainsKey(func))
+                {
+                    FuncToFuncRunPermission.Add(func,FuncRunPermission.None);
+                }
+
+                //取出权限值
+                FuncRunPermission funcPermission = (FuncRunPermission)FuncToFuncRunPermission[func];
+                
                 //如果功能没有注册，进行功能注册
-                if (func.FuncState == FuncStateArg.None && arg != FuncStateArg.None)
+                if (funcPermission == FuncRunPermission.None && permission != FuncRunPermission.None)
                 {
                     //Id到这个类
                     UIDToFunc.Add(func.UID, func);
@@ -123,12 +128,12 @@ namespace IngameScript
                     RunSaveActionList.Add(func.Save);
 
                     //相当于仅注册
-                    func.FuncState = FuncStateArg.ToggleAllOff;
+                    funcPermission = FuncRunPermission.ToggleAllOff;
                 }
                 //下面不能是else if 因为注册完后还要跳出，并执行真正的参数
 
                 //如果注册过，取消注册
-                if (arg == FuncStateArg.None && func.FuncState != FuncStateArg.None)
+                if (permission == FuncRunPermission.None && funcPermission != FuncRunPermission.None)
                 {
                     UIDToFunc.Remove(func.UID);
 
@@ -148,44 +153,46 @@ namespace IngameScript
                     RunSaveActionList.Remove(func.Save);
 
                     //相当于未注册
-                    func.FuncState = FuncStateArg.None;
+                    funcPermission = FuncRunPermission.None;
                 }
                 else
                 {
                     //用else if 是为了 过滤同时设置Listening和UnListened，优先取Listening
-                    if (Convert.ToBoolean(arg & FuncStateArg.Listening))
+                    if (Convert.ToBoolean(permission & FuncRunPermission.Listening))
                     {
                         //不保留这一位
-                        func.FuncState &= ~FuncStateArg.Unlistened;
+                        funcPermission &= ~FuncRunPermission.Unlistened;
                         //增加这样一位
-                        func.FuncState |= FuncStateArg.Listening;
+                        funcPermission |= FuncRunPermission.Listening;
                     }
-                    else if (Convert.ToBoolean(arg & FuncStateArg.Unlistened))
+                    else if (Convert.ToBoolean(permission & FuncRunPermission.Unlistened))
                     {
-                        func.FuncState &= ~FuncStateArg.Listening;
-                        func.FuncState |= FuncStateArg.Unlistened;
+                        funcPermission &= ~FuncRunPermission.Listening;
+                        funcPermission |= FuncRunPermission.Unlistened;
                     }
                     //else if 与上面同理
                     //注意，这个功能只是把原本会循环的功能开启循环，原本设置不是循环的函数，即None不会继续循环
                     //相当于截断循环和恢复截断
                     //当然经过arg运行后，比如更新频率变为Once,或者其他。打开循环后，会变成RunOnce等
-                    if (Convert.ToBoolean(arg & FuncStateArg.Cycling)&&Convert.ToBoolean(func.FuncState&FuncStateArg.Cycling))
+                    if (Convert.ToBoolean(permission & FuncRunPermission.Cycling)&&Convert.ToBoolean(funcPermission & FuncRunPermission.Cycling))
                     {
                         //因为变频事件中改List会被Uncycled阻断，应该可以加
                         (UpdateFrencyToActionList[func.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Add(func.Main);
-                        func.FuncState &= ~FuncStateArg.Uncycled;
-                        func.FuncState |= FuncStateArg.Cycling;
+                        funcPermission &= ~FuncRunPermission.Uncycled;
+                        funcPermission |= FuncRunPermission.Cycling;
 
                     }
-                    else if (Convert.ToBoolean(arg & FuncStateArg.Uncycled)&&Convert.ToBoolean(func.FuncState&FuncStateArg.Uncycled))
+                    else if (Convert.ToBoolean(permission & FuncRunPermission.Uncycled)&&Convert.ToBoolean(funcPermission & FuncRunPermission.Uncycled))
                     {
                         //因为变频事件中改List会被Uncycled阻断，应该可以减
                         (UpdateFrencyToActionList[func.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Remove(func.Main);
-                        func.FuncState &= ~FuncStateArg.Cycling;
-                        func.FuncState |= FuncStateArg.Uncycled;
+                        funcPermission &= ~FuncRunPermission.Cycling;
+                        funcPermission |= FuncRunPermission.Uncycled;
 
                     }
                 }
+                //存回权限值
+                FuncToFuncRunPermission[func] = funcPermission;
             }
 
             /// <summary>
@@ -193,13 +200,7 @@ namespace IngameScript
             /// </summary>
             public void RunOnceFunc()
             {
-                //包含是否允许循环的检查
-                RunOnceActionList.ForEach(x =>
-                {
-                    if (Convert.ToBoolean(
-                      (FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
-                        x("", UpdateType.Once);
-                });
+                RunOnceActionList.ForEach(x => x("", UpdateType.Once));
             }
 
             /// <summary>
@@ -207,11 +208,7 @@ namespace IngameScript
             /// </summary>
             public void RunCycle1Func()
             {
-                Run1ActionList.ForEach(x =>
-                {
-                    if (Convert.ToBoolean((FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
-                        x("", UpdateType.Update1);
-                });
+                Run1ActionList.ForEach(x =>x("", UpdateType.Update1));
             }
 
             /// <summary>
@@ -219,11 +216,7 @@ namespace IngameScript
             /// </summary>
             public void RunCycle10Func()
             {
-                Run10ActionList.ForEach(x =>
-                 {
-                     if (Convert.ToBoolean((FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
-                         x("", UpdateType.Update10);
-                 });
+                Run10ActionList.ForEach(x => x("", UpdateType.Update10));
             }
 
             /// <summary>
@@ -231,11 +224,7 @@ namespace IngameScript
             /// </summary>
             public void RunCycle100Func()
             {
-                Run100ActionList.ForEach(x =>
-                {
-                    if (Convert.ToBoolean((FuncMainToFunc[x] as CustomFuncBase).FuncState & FuncStateArg.Cycling))
-                        x("", UpdateType.Update100);
-                });
+                Run100ActionList.ForEach(x => x("", UpdateType.Update100));
             }
 
             /// <summary>
@@ -275,7 +264,9 @@ namespace IngameScript
                     if (UIDToFunc[UID] != null)
                     {
                         CustomFuncBase func = UIDToFunc[UID] as CustomFuncBase;
-                        if (Convert.ToBoolean(func.FuncState & FuncStateArg.Listening))
+                        if (Convert.ToBoolean(
+                            (FuncRunPermission)FuncToFuncRunPermission[func] 
+                            & FuncRunPermission.Listening))
                         {
                             func?.Main(arg, updateSource);
                         }
@@ -302,7 +293,9 @@ namespace IngameScript
                     foreach (var cache in FrequencyChangedInfoCaches)
                     {  
                         //如果是不允许循环，则直接跳过，因为RunActionList中都没有
-                        if(Convert.ToBoolean((cache.sender as CustomFuncBase).FuncState & FuncStateArg.Uncycled))
+                        if(Convert.ToBoolean(
+                            (FuncRunPermission)FuncToFuncRunPermission[(cache.sender as CustomFuncBase)] 
+                            & FuncRunPermission.Uncycled))
                         {
                             //如果是Once->Once，加入删除例外列表中
                             if (cache.e.previous == UpdateFrequency.Once && cache.e.now == UpdateFrequency.Once)

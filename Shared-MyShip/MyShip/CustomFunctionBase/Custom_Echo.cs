@@ -29,7 +29,7 @@ namespace IngameScript
             /// </summary>
             protected class Custom_Echo
             {
-                private CustomFuncBase func;
+                private readonly CustomFuncBase func;
                 public Custom_Echo(CustomFuncBase func)
                 {
                     this.func = func;
