@@ -27,7 +27,7 @@ namespace IngameScript
         {
 
             ship = new MyShip(this);
-            ship.CustomFuncs.ManageFunc(new TestFunc(this, ship, "TestFunc", "TestFuncTestAlll"),CustomFuncManager.FuncStateArg.ToggleAllOn);
+            ship.CustomFuncs.ManageFunc(new TestFunc(this, ship, "TestFunc", "TestFuncTestAlll"),FuncStateArg.ToggleAllOn);
             
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
         }

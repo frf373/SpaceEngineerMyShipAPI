@@ -313,7 +313,7 @@ namespace IngameScript
                 Ini = new MyIni();
 
                 //功能未注册
-                FuncState = CustomFuncManager.FuncStateArg.None;
+                FuncState = FuncStateArg.None;
             }
 
             /// <summary>
@@ -354,7 +354,7 @@ namespace IngameScript
             /// <summary>
             /// 功能运行状况
             /// </summary>
-            public CustomFuncManager.FuncStateArg FuncState {  get; set; }
+            public FuncStateArg FuncState {  get; set; }
         }
     }
 }
