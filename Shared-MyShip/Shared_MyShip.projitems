@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>61eba249-19f3-48b6-a25b-a4cee90168ba</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>IngameScript</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)MyExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Echo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Runtime.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_IGC.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoDoorFunc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\DoorSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoLevel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoPanelSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\MyShip.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\AssistanceSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\CommunicationSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\DetectionSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\DynamicSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\LandingSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\GasSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\WeaponSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\LifeSupportSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\LightSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\MechanicalSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ProductionSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\StorageSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\TradeSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ToolSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ControlSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\LCDSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ElectricSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ConnectionSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ShipSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\ShipSystemCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\GravitationalSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\Language.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\LanguageSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\BlockShowState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\RebootArg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\TestFunc.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\" />
+  </ItemGroup>
+</Project>
