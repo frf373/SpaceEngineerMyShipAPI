@@ -25,10 +25,9 @@ namespace IngameScript
         MyShip ship;
         public Program()
         {
-
             ship = new MyShip(this);
-            ship.CustomFuncs.ManageFunc(new TestFunc(this, ship, "TestFunc", "TestFuncTestAlll"),FuncRunPermission.ToggleAllOn);
-            
+            ship.CustomFuncs.ManageFunc(new TestFunc(this, ship, "TestFunc", "TestFuncTestAlll"), FuncRunPermission.ToggleAllOn);
+
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
         }
 
@@ -50,7 +49,10 @@ namespace IngameScript
             //比如输出Echo流中所有内容，日志
             ship.RunAlwaysFunc(arg, source);
         }
-        /*
+        
+    }
+
+    /*
         123456789012
         [Instance]
         Type=
@@ -58,7 +60,6 @@ namespace IngameScript
         [MethodName]
         Params=
         #+-
-
+    
          */
-    }
 }
