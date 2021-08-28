@@ -320,8 +320,7 @@ namespace IngameScript
             /// <param name="source">更新类型</param>
             public virtual void Main(string arg, UpdateType source)
             {
-                RunAlwaysAction?.Invoke(arg,source);
-
+                
                 if (Convert.ToBoolean(source & (UpdateType.Once | UpdateType.Update1 | UpdateType.Update10 | UpdateType.Update100)))
                 {
                     RunCycleAction?.Invoke();
@@ -330,6 +329,7 @@ namespace IngameScript
                 {
                     RunArgAction?.Invoke(arg, source);
                 }
+                RunAlwaysAction?.Invoke(arg, source);
             }
 
             /// <summary>

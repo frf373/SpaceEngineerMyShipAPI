@@ -259,6 +259,48 @@ namespace IngameScript
                 //记录为缓存，不能直接更改函数频率，防止破坏List的枚举器
                 FrequencyChangedInfoCaches.Add(new FrequencyChangedInfoCache(this, sender, e));
             }
+
+            public string GetEchoCache()
+            {
+                return "";
+            }
+            public void EchoAllCache()
+            {
+                
+            }
+
+            /// <summary>
+            /// 功能运行参数
+            /// </summary>
+            [Flags]
+            public enum FuncOperationArg
+            {
+                /// <summary>
+                /// 只注册此功能
+                /// </summary>
+                Register=1,
+                /// <summary>
+                /// 运行此功能,如果没有注册过是无法运行的
+                /// </summary>
+                Run=2,
+                /// <summary>
+                /// 停止运行此功能
+                /// </summary>
+                Stop=4,
+                /// <summary>
+                /// 只卸载此功能，如果没有停止是无法卸载的
+                /// </summary>
+                Unregister = 8,
+                /// <summary>
+                /// 先注册后运行
+                /// </summary>
+                RegisterAndRun =Register|Run,
+                /// <summary>
+                /// 先停止后卸载
+                /// </summary>
+                StopAndUnregister = Stop|Unregister
+            }
+            
         }
     }
 }

@@ -40,8 +40,6 @@ namespace IngameScript
         
         public void Main(string arg, UpdateType source)
         {
-            ship.RunAlwaysFunc(arg, source);
-
             if (Convert.ToBoolean( source & (UpdateType.Once|UpdateType.Update1|UpdateType.Update10|UpdateType.Update100)))
             {
                 ship.RunAllCircleFunc();
@@ -50,6 +48,8 @@ namespace IngameScript
             {
                 ship.RunArgFunc(arg, source);
             }
+            //比如输出Echo流中所有内容
+            ship.RunAlwaysFunc(arg, source);
         }
     }
 }

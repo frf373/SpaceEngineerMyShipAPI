@@ -24,6 +24,9 @@ namespace IngameScript
     {
         abstract public partial class CustomFuncBase
         {
+            /// <summary>
+            /// 定义好转发规则的Echo,并且有流功能和缓存功能
+            /// </summary>
             protected class Custom_Echo
             {
                 private CustomFuncBase func;
@@ -39,9 +42,18 @@ namespace IngameScript
                 /// </summary>
                 public int Echo_CacheCounter { get; set; }
 
+                /// <summary>
+                /// 内容构造器
+                /// </summary>
                 private StringBuilder contentBuilder;
+
+                /// <summary>
+                /// 向Echo流中写入信息
+                /// </summary>
+                /// <param name="content"></param>
                 public void Echo_Builder(string content)
                 {
+                    //重置缓存计数器，并且代表有缓存内容
                     Echo_CacheCounter = 0;
                     contentBuilder.Append(content);
                 }
@@ -50,11 +62,35 @@ namespace IngameScript
                 /// 是否有内容需要刷新出去
                 /// </summary>
                 public bool HasContent => contentBuilder.Length != 0;
-                public string Echo_Flush()
+
+                /// <summary>
+                /// Echo内容缓存内容
+                /// </summary>
+                public string Echo_Cache {  get; set; }
+
+                /// <summary>
+                /// 是否有缓存信息
+                /// </summary>
+                public bool HasEcho_Cache => Echo_CacheCounter != -1;
+
+                /// <summary>
+                /// 刷新并输出Echo流
+                /// </summary>
+                /// <returns>要Echo的消息</returns>
+                public void Echo_Flush()
                 {
-                    string content = "[" + func.FuncName + "]" + "\n" + contentBuilder.ToString();
+                    //定义转发规则，并且向缓存中输入
+                    Echo_Cache = "[" + func.FuncName + "]" + "\n" + contentBuilder.ToString();
                     contentBuilder.Clear();
-                    return content;
+                }
+
+                /// <summary>
+                /// 重置缓存，比如计数器达到指定数字后，Echo不在需要这个信息，常用于某个信息停留在屏幕上一会
+                /// </summary>
+                public void Reset_Cache()
+                {
+                    //-1代表无缓存信息
+                    Echo_CacheCounter = -1;
                 }
             }
             
