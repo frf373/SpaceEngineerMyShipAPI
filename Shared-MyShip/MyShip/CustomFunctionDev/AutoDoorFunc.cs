@@ -38,7 +38,7 @@ namespace IngameScript
 
             public void SetDoorsStatus()
             {
-                
+                 
             }
 
             public double AutoToggleDistance { get; set; }

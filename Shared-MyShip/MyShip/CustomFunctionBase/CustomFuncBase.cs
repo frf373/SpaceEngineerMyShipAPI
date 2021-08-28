@@ -254,7 +254,7 @@ namespace IngameScript
                 {
                     if(uid == null)
                     {
-                        throw new Exception("未设置16位转发ID，不能使用转发功能");
+                        ReportException("未设置16位转发ID，不能使用转发功能");
                     }
                     return uid;
                 }
@@ -262,13 +262,13 @@ namespace IngameScript
                 {
                     if (value.Length != 16)
                     {
-                        throw new Exception("转发规则ID应该是长度为16位的字符串");
+                        ReportException("转发规则ID应该是长度为16位的字符串");
                     }
                     else
                     {
                         if(value.Contains("[")||value.Contains("]"))
                         {
-                            throw new Exception("转发规则ID中[和]符号是不被允许的");
+                            ReportException("转发规则ID中[和]符号是不被允许的");
                         }
                         else
                         {
@@ -332,6 +332,15 @@ namespace IngameScript
             public virtual void Save()
             {
 
+            }
+
+            /// <summary>
+            /// 相当于throw new Exception 但会自动帮你加上功能名称和UID
+            /// </summary>
+            /// <param name="exceptionContent">例外内容</param>
+            public void ReportException(string exceptionContent)
+            {
+                throw new Exception($"[FuncName:{FuncName}][UID:{UID}]Exception:"+exceptionContent);
             }
 
         }
