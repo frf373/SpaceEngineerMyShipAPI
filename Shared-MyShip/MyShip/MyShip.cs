@@ -85,7 +85,7 @@ namespace IngameScript
             /// <summary>
             /// 飞船功能集合
             /// </summary>
-            public CustomFuncCollection CustomFuncs {  get; set; }
+            public CustomFuncManager CustomFuncs {  get; set; }
 
             /// <summary>
             /// 飞船系统集合
@@ -102,7 +102,7 @@ namespace IngameScript
                 this.Language = Language.Chinese;
 
                 ShipSystems = new ShipSystemCollection(this);
-                CustomFuncs = new CustomFuncCollection(this);
+                CustomFuncs = new CustomFuncManager(this);
 
                 CycleCount = 0;
             }

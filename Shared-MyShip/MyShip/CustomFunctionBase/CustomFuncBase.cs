@@ -311,6 +311,9 @@ namespace IngameScript
                 Runtime = new Custom_Runtime(program,this);
                 _Echo = new Custom_Echo(this);
                 Ini = new MyIni();
+
+                //功能未注册
+                FuncState = CustomFuncManager.FuncStateArg.None;
             }
 
             /// <summary>
@@ -320,7 +323,6 @@ namespace IngameScript
             /// <param name="source">更新类型</param>
             public virtual void Main(string arg, UpdateType source)
             {
-                
                 if (Convert.ToBoolean(source & (UpdateType.Once | UpdateType.Update1 | UpdateType.Update10 | UpdateType.Update100)))
                 {
                     RunCycleAction?.Invoke();
@@ -344,11 +346,15 @@ namespace IngameScript
             /// 相当于throw new Exception 但会自动帮你加上功能名称和UID
             /// </summary>
             /// <param name="exceptionContent">例外内容</param>
-            public void ReportException(string exceptionContent)
+            protected void ReportException(string exceptionContent)
             {
                 throw new Exception($"[FuncName:{FuncName}][UID:{UID}]Exception:"+exceptionContent);
             }
 
+            /// <summary>
+            /// 功能运行状况
+            /// </summary>
+            public CustomFuncManager.FuncStateArg FuncState {  get; set; }
         }
     }
 }

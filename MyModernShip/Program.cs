@@ -27,8 +27,7 @@ namespace IngameScript
         {
 
             ship = new MyShip(this);
-            ship.CustomFuncs.AddFunc(new TestFunc(this, ship, "TestFunc", "TestFuncTestAlll"));
-            //ship.CustomFuncs.AddFunc(new AutoDoorFunc(this, ship, "AutoDoor","CopyTestABCDEDGH"));/////////////here!
+            ship.CustomFuncs.ManageFunc(new TestFunc(this, ship, "TestFunc", "TestFuncTestAlll"),CustomFuncManager.FuncStateArg.ToggleAllOn);
             
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
         }

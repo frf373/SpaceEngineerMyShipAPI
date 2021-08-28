@@ -22,7 +22,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class CustomFuncCollection
+        public class CustomFuncManager
         {
             /// <summary>
             /// 只运行一次功能表
@@ -47,7 +47,7 @@ namespace IngameScript
             /// </summary>
             List<Action> RunSaveActionList {  get; set; }
             /// <summary>
-            /// 标识符ID到自定函数类的哈希表
+            /// 标识符ID到自定函数类的哈希表，防止一个函数注册多次
             /// </summary>
             Hashtable UIDToFunc { get; set; }
 
@@ -60,7 +60,7 @@ namespace IngameScript
             /// 飞船功能接口
             /// </summary>
             //private MyShip ship;
-            public CustomFuncCollection(MyShip ship)
+            public CustomFuncManager(MyShip ship)
             {
                 //this.ship = ship;
 
@@ -82,12 +82,14 @@ namespace IngameScript
                 FrequencyChangedInfoCaches = new List<FrequencyChangedInfoCache>();
             }
 
+
             /// <summary>
             /// 把自定义功能加载到飞船功能中
             /// </summary>
-            /// <param name="customFunc">自定义功能函数</param>
-            public void AddFunc(CustomFuncBase customFunc)
+            public void ManageFunc(CustomFuncBase customFunc,FuncStateArg managerArg)
             {
+
+
                 //Id到这个类
                 UIDToFunc.Add(customFunc.UID, customFunc);
                 //None不考虑
@@ -95,7 +97,7 @@ namespace IngameScript
                 {
                     (UpdateFrencyToActionList[customFunc.Runtime.UpdateFrequency] as List<Action<string, UpdateType>>).Add(customFunc.Main);
                 }
-                
+
                 customFunc.Runtime.OnUpdateFrequencyChanged += FuncUpdateFrequencyChangedHandler;
 
                 RunSaveActionList.Add(customFunc.Save);
@@ -218,7 +220,7 @@ namespace IngameScript
                 /// <summary>
                 /// 函数集合接口
                 /// </summary>
-                public CustomFuncCollection customFuncs;
+                public CustomFuncManager customFuncs;
 
                 /// <summary>
                 /// 更新频率的功能函数
@@ -236,7 +238,7 @@ namespace IngameScript
                 /// <param name="customFuncs">函数集合接口，本类中调用填this就行</param>
                 /// <param name="sender">更新频率的功能函数</param>
                 /// <param name="e">更新后的频率事件参数</param>
-                public FrequencyChangedInfoCache(CustomFuncCollection customFuncs, object sender, CustomFuncBase.UpdateFrequencyChangedEventArgs e)
+                public FrequencyChangedInfoCache(CustomFuncManager customFuncs, object sender, CustomFuncBase.UpdateFrequencyChangedEventArgs e)
                 {
                     this.customFuncs = customFuncs;
                     this.sender = sender;
@@ -270,35 +272,45 @@ namespace IngameScript
             }
 
             /// <summary>
-            /// 功能运行参数
+            /// 功能运行状态参数
             /// </summary>
             [Flags]
-            public enum FuncOperationArg
+            public enum FuncStateArg
             {
                 /// <summary>
-                /// 只注册此功能
+                /// 代表未注册的功能
                 /// </summary>
-                Register=1,
+                None=0,
+
                 /// <summary>
-                /// 运行此功能,如果没有注册过是无法运行的
+                /// 开启此功能的参数监听，即向此功能传参数是有效的
                 /// </summary>
-                Run=2,
+                Listening=1,
+
                 /// <summary>
-                /// 停止运行此功能
+                /// 关闭此功能的参数监听，即向此功能传参数是无效的
                 /// </summary>
-                Stop=4,
+                Unlistened = 2,
+
                 /// <summary>
-                /// 只卸载此功能，如果没有停止是无法卸载的
+                /// 开始循环此功能
                 /// </summary>
-                Unregister = 8,
+                Cycling =4,
+
                 /// <summary>
-                /// 先注册后运行
+                /// 停止循环此功能
                 /// </summary>
-                RegisterAndRun =Register|Run,
+                Uncycled = 8,
+
                 /// <summary>
-                /// 先停止后卸载
+                /// 一般来说选这个，功能全开
                 /// </summary>
-                StopAndUnregister = Stop|Unregister
+                ToggleAllOn=Listening|Cycling,
+
+                /// <summary>
+                /// 全部关闭,仅相当于注册过
+                /// </summary>
+                ToggleAllOff=Unlistened|Uncycled
             }
             
         }
