@@ -1,4 +1,4 @@
-﻿using Sandbox.Game.EntityComponents;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
@@ -169,7 +169,7 @@ namespace IngameScript
 
             public void EchoAll()
             {
-                //Echo(CustomFuncs)
+                Echo(CustomFuncs.GetAllEchoCache());
             }
 
             /// <summary>
