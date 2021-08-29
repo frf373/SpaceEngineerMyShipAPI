@@ -114,7 +114,14 @@ namespace IngameScript
             /// <param name="source">更新源</param>
             public void RunArgFunc(string arg,UpdateType source)
             {
-                CustomFuncs.HandleArg(arg, source);
+                if(source==UpdateType.IGC)
+                {
+                    CustomFuncs.HandleIGC(arg);
+                }
+                else
+                {   
+                    CustomFuncs.HandleArg(arg, source);
+                }
             }
 
             /// <summary>

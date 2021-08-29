@@ -45,6 +45,7 @@ namespace IngameScript
             /// </summary>
             protected ShipSystemCollection ShipSystems => ship.ShipSystems;
 
+            protected CustomFuncManager CustomFuncs => ship.CustomFuncs;
             /// <summary>
             /// 直接使用，无需定义转发规则
             /// </summary>

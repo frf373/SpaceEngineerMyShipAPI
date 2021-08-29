@@ -34,21 +34,20 @@ namespace IngameScript
                     this.customFunc = customFunc;
                     updateFrequency = UpdateFrequency.None;
                 }
-
-                private Program program => customFunc.program;
+                private IMyGridProgramRuntimeInfo originalRuntime => customFunc.program.Runtime;
 
                 private readonly CustomFuncBase customFunc;
-                public TimeSpan TimeSinceLastRun => program.Runtime.TimeSinceLastRun;
+                public TimeSpan TimeSinceLastRun => originalRuntime.TimeSinceLastRun;
 
-                public double LastRunTimeMs => program.Runtime.LastRunTimeMs;
+                public double LastRunTimeMs => originalRuntime.LastRunTimeMs;
 
-                public int MaxInstructionCount => program.Runtime.MaxInstructionCount;
+                public int MaxInstructionCount => originalRuntime.MaxInstructionCount;
 
-                public int CurrentInstructionCount => program.Runtime.CurrentInstructionCount;
+                public int CurrentInstructionCount => originalRuntime.CurrentInstructionCount;
 
-                public int MaxCallChainDepth => program.Runtime.MaxCallChainDepth;
+                public int MaxCallChainDepth => originalRuntime.MaxCallChainDepth;
 
-                public int CurrentCallChainDepth => program.Runtime.CurrentCallChainDepth;
+                public int CurrentCallChainDepth => originalRuntime.CurrentCallChainDepth;
 
                 /// <summary>
                 /// 与主程序隔开的更新频率

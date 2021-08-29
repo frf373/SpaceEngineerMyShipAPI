@@ -22,7 +22,7 @@ namespace IngameScript
 {
     partial class Program
     {
-        public class CustomFuncManager
+        public partial class CustomFuncManager
         {
             /// <summary>
             /// 不运行的功能
@@ -95,6 +95,9 @@ namespace IngameScript
 
                 FrequencyChangedInfoCaches = new List<FrequencyChangedInfoCache>();
                 RunOnceDeletedExceptions = new List<Action<string, UpdateType>> ();
+
+                FuncsListeners = new List<IMyBroadcastListener>();
+                ListenerToFunc = new Hashtable();
             }
 
             /// <summary>
@@ -248,6 +251,49 @@ namespace IngameScript
             }
 
             /// <summary>
+            /// 注册有转发规则的广播监听
+            /// </summary>
+            /// <param name="func">广播监听所属功能类</param>
+            /// <param name="listener">广播监听</param>
+            public void RegisterBroadcastListener(CustomFuncBase func,IMyBroadcastListener listener)
+            {
+                FuncsListeners.Add(listener);
+                ListenerToFunc.Add(listener, func);
+            }
+
+            /// <summary>
+            /// 包含所有功能类中的所有广播监听的列表
+            /// </summary>
+            private List<IMyBroadcastListener> FuncsListeners { get; set; }
+
+            /// <summary>
+            /// 广播监听到自定义功能类
+            /// </summary>
+            private Hashtable ListenerToFunc {  get; set; }
+
+            /// <summary>
+            /// 处理IGC转发，找到转发对象
+            /// </summary>
+            /// <param name="arg">原参数</param>
+            public void HandleIGC(string arg)
+            {
+                string uid = "";
+                foreach(var listener in FuncsListeners)
+                {
+                    if (listener.HasPendingMessage)
+                    {
+                        uid=ListenerToFunc[listener] as string;
+                        break;
+                    }
+                }
+                if(uid.Length!=0)
+                {
+                    RunArgFunc(uid, arg, UpdateType.IGC);
+                }
+                
+            }
+
+            /// <summary>
             /// 对一个功能执行有参数的运行
             /// </summary>
             /// <param name="UID">功能16位字符串标识符(独一无二的)</param>
@@ -282,7 +328,12 @@ namespace IngameScript
                     }
                 }
             }
+
+            /// <summary>
+            /// 应对Once->Once的频率变化，RunOnceActionList中不允许清空的Action
+            /// </summary>
             private List<Action<string,UpdateType>> RunOnceDeletedExceptions {  get; set; }
+
             /// <summary>
             /// 从缓存信息中更新功能运行频率，防止直接更新后破坏List的枚举器
             /// </summary>

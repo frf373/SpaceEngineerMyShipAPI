@@ -45,11 +45,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\LanguageSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\BlockShowState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\RebootArg.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\CustomFuncManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\TestFunc.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\" />
+    <Folder Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\" />
   </ItemGroup>
 </Project>
