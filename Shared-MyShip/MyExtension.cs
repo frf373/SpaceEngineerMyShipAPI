@@ -23,6 +23,5 @@ namespace IngameScript
     public static class MyExtensions
     {
 
-
     }
 }

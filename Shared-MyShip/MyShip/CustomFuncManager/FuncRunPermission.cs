@@ -22,7 +22,6 @@ namespace IngameScript
 {
     partial class Program
     {
-
         /// <summary>
         /// 功能运行权限参数
         /// </summary>

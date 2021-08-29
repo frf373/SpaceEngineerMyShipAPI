@@ -23,7 +23,7 @@ namespace IngameScript
     partial class Program
     {
         [Flags]
-        public enum RebootArg
+        public enum SystemRebootArg
         {
             None=0,
             Assistance=1,

@@ -26,13 +26,14 @@ namespace IngameScript
         {
             private void HandleCustomFuncException(Action<string,UpdateType> action,Exception e)
             {
+                /////////////
                 if(e is CustomFuncBase.CustomFuncException)
                 {
 
                 }
                 else
                 {
-
+                    
                 }
             }
             

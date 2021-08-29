@@ -72,7 +72,7 @@ namespace IngameScript
             /// <summary>
             /// 功能类到功能运行权限
             /// </summary>
-            Hashtable FuncToFuncRunPermission {  get; set; }
+            Hashtable FuncToFuncRunPermission { get; set; }
 
             public CustomFuncManager()
             {

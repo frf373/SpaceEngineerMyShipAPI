@@ -27,12 +27,7 @@ namespace IngameScript
 
             public TestFunc(Program program,MyShip ship,string funcName,string uid):base(program,ship,funcName,uid)
             {
-                /*MyIni ini=new MyIni();
-                ini.TryParse(GridTerminalSystem.GetBlockWithName("TestIni").CustomData);
-                Echo(ini.Get("Test", "Good").Key.Section);
-                Echo(ini.Get("Test", "Good").Key.Name);
-                Echo(ini.Get("Test", "Good").Key.ToString());
-                Echo(ini.Get("Test", "Good").ToString());*/
+                
             }
 
         }

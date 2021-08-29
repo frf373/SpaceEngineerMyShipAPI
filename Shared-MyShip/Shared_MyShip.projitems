@@ -20,8 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_IGC.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoDoorFunc.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\FuncRunPermission.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\DoorSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoLevel.cs" />
@@ -51,10 +49,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\Language.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\LanguageSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\BlockShowState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\RebootArg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\SystemRebootArg.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\CustomFuncManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\TestFunc.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\" />
