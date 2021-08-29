@@ -22,8 +22,13 @@ namespace IngameScript
 {
     partial class Program
     {
-        abstract public partial class CustomFuncBase
+        public partial class CustomFuncBase
         {
+            /// <summary>
+            /// 自定义IGC
+            /// </summary>
+            public Custom_IGC IGC { get; set; }
+
             /// <summary>
             /// 定义好转发规则的IGC系统
             /// </summary>

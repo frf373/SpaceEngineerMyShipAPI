@@ -22,8 +22,18 @@ namespace IngameScript
 {
     partial class Program
     {
-        abstract public partial class CustomFuncBase
+        public partial class CustomFuncBase
         {
+            /// <summary>
+            /// 自定义Echo流
+            /// </summary>
+            public Custom_Echo CustomEcho { get; set; }
+
+            /// <summary>
+            /// 定义好的转发规则和缓存功能的Echo
+            /// </summary>
+            protected Action<string> Echo => CustomEcho.Echo_Builder;
+
             /// <summary>
             /// 定义好转发规则的Echo,并且有流功能和缓存功能
             /// </summary>

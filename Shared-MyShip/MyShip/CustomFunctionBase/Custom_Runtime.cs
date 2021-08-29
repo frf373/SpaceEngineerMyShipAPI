@@ -22,8 +22,13 @@ namespace IngameScript
 {
     partial class Program
     {
-        abstract public partial class CustomFuncBase
+        public partial class CustomFuncBase
         {
+            /// <summary>
+            /// 自定义Runtime类
+            /// </summary>
+            public Custom_Runtime Runtime { get; protected set; }
+
             /// <summary>
             /// 重写的Runtime,必须和主程序隔开的类
             /// </summary>

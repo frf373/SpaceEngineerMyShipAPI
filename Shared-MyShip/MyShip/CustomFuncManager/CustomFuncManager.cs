@@ -207,7 +207,17 @@ namespace IngameScript
             /// </summary>
             public void RunOnceFunc()
             {
-                RunOnceActionList.ForEach(x => x("", UpdateType.Once));
+                foreach (var action in RunOnceActionList)
+                {
+                    try
+                    {
+                        action("", UpdateType.Once);
+                    }
+                    catch (Exception e)
+                    {
+                        HandleCustomFuncException(action, e);
+                    }
+                }
             }
 
             /// <summary>
@@ -215,7 +225,17 @@ namespace IngameScript
             /// </summary>
             public void RunCycle1Func()
             {
-                Run1ActionList.ForEach(x =>x("", UpdateType.Update1));
+                foreach(var action in Run1ActionList)
+                {
+                    try
+                    {
+                        action("", UpdateType.Update1);
+                    }
+                    catch (Exception e)
+                    {
+                        HandleCustomFuncException(action, e);
+                    }
+                }
             }
 
             /// <summary>
@@ -223,7 +243,18 @@ namespace IngameScript
             /// </summary>
             public void RunCycle10Func()
             {
-                Run10ActionList.ForEach(x => x("", UpdateType.Update10));
+                foreach (var action in Run10ActionList)
+                {
+                    try
+                    {
+                        action("", UpdateType.Update10);
+                    }
+                    catch (Exception e)
+                    {
+                        HandleCustomFuncException(action, e);
+                    }
+
+                }
             }
 
             /// <summary>
@@ -231,7 +262,17 @@ namespace IngameScript
             /// </summary>
             public void RunCycle100Func()
             {
-                Run100ActionList.ForEach(x => x("", UpdateType.Update100));
+                foreach (var action in Run100ActionList)
+                {
+                    try
+                    {
+                        action("", UpdateType.Update100);
+                    }
+                    catch (Exception e)
+                    {
+                        HandleCustomFuncException(action, e);
+                    }
+                }
             }
 
             /// <summary>

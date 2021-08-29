@@ -11,9 +11,11 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)MyExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\CustomIGCArgBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\ExceptionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\IGCManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\EchoManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\FrequencyManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_CustomData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Echo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Runtime.cs" />
