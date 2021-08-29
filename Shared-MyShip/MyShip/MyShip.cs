@@ -176,7 +176,7 @@ namespace IngameScript
 
             public void EchoAll()
             {
-                //Echo(CustomFuncs)
+                Echo(CustomFuncs.GetAllEchoCache());
             }
 
             /// <summary>
