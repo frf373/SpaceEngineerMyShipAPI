@@ -351,7 +351,7 @@ namespace IngameScript
             /// <param name="exceptionContent">例外内容</param>
             protected void ReportException(string exceptionContent)
             {
-                throw new Exception($"[FuncName:{FuncName}][UID:{UID}]Exception:"+exceptionContent);
+                throw new CustomFuncException(this,$"[FuncName:{FuncName}][UID:{UID}]Exception:"+exceptionContent);
             }
         }
     }
