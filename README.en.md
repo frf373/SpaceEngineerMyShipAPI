@@ -58,6 +58,16 @@ The small version number represents function optimization and experience repair 
 
 ////////////////////////////////////////
 
+[version: 1.2] new
+
+[MyShipAPI]
+
+1. Add customigc class and define forwarding rules. There is no problem sending and receiving broadcasts at the same time
+
+2. Add customigcargbase and define the parameter base class for forwarding, which can be used. Including sender, data and other functions
+
+////////////////////////////////////////
+
 [version: 1.1] new
 
 [MyShipAPI]

@@ -58,13 +58,23 @@
 
 ////////////////////////////////////////
 
+[Version:1.2]版本新增
+
+[MyShipAPI]
+
+1.新增CustomIGC类，定义好了转发规则。同时发送和接收广播都没有问题
+
+2.新增CustomIGCArgBase，定义好了转发用的参数基类，可供使用。包含了sender，data等功能
+
+////////////////////////////////////////
+
 [Version:1.1]版本新增
 
 [MyShipAPI]
 
-1.Set_CustomData,Get_CustomData,Add_CustomData 规范了对自定义数据操作。精准取出和自己函数有关的内容。一个方块自定义数据保存各种功能的数据
+1.新增Set_CustomData,Get_CustomData,Add_CustomData 规范了对自定义数据操作。精准取出和自己函数有关的内容。一个方块自定义数据保存各种功能的数据
 
-2.Custom_Echo类，使得多个功能可以同时Echo,并且用功能标识符隔开。有缓存Echo内容的功能，比如停留50tick，在50tick中，内容都会显示
+2.新增Custom_Echo类，使得多个功能可以同时Echo,并且用功能标识符隔开。有缓存Echo内容的功能，比如停留50tick，在50tick中，内容都会显示
 
 ////////////////////////////////////////
 
