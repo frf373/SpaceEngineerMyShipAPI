@@ -29,14 +29,13 @@ namespace IngameScript
             /// </summary>
             public class Custom_Runtime : IMyGridProgramRuntimeInfo
             {
-                public Custom_Runtime(Program program, CustomFuncBase customFunc)
+                public Custom_Runtime(CustomFuncBase customFunc)
                 {
-                    this.program = program;
                     this.customFunc = customFunc;
                     updateFrequency = UpdateFrequency.None;
                 }
 
-                private readonly Program program;
+                private Program program => customFunc.program;
 
                 private readonly CustomFuncBase customFunc;
                 public TimeSpan TimeSinceLastRun => program.Runtime.TimeSinceLastRun;

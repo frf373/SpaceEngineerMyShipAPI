@@ -24,54 +24,36 @@ namespace IngameScript
     {
         abstract public partial class CustomFuncBase
         {
-            /*public class Custom_IGC : IMyIntergridCommunicationSystem
+            public class Custom_IGC
             {
-                public long Me
+                private readonly CustomFuncBase func;
+
+                private IMyIntergridCommunicationSystem OriginalIGC => func.program.IGC;
+
+                public Custom_IGC(CustomFuncBase func)
                 {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
+                    this.func = func;
                 }
 
-                public IMyUnicastListener UnicastListener
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
+                public long Me => OriginalIGC.Me;
 
-                public void DisableBroadcastListener(IMyBroadcastListener broadcastListener)
-                {
-                    throw new NotImplementedException();
-                }
 
-                public void GetBroadcastListeners(List<IMyBroadcastListener> broadcastListeners, Func<IMyBroadcastListener, bool> collect = null)
-                {
-                    throw new NotImplementedException();
-                }
+                public IMyUnicastListener UnicastListener => OriginalIGC.UnicastListener;
 
-                public bool IsEndpointReachable(long address, TransmissionDistance transmissionDistance = TransmissionDistance.AntennaRelay)
-                {
-                    throw new NotImplementedException();
-                }
 
-                public IMyBroadcastListener RegisterBroadcastListener(string tag)
-                {
-                    throw new NotImplementedException();
-                }
+                public void DisableBroadcastListener(IMyBroadcastListener broadcastListener) => OriginalIGC.DisableBroadcastListener(broadcastListener);
 
-                public void SendBroadcastMessage<TData>(string tag, TData data, TransmissionDistance transmissionDistance = TransmissionDistance.AntennaRelay)
-                {
-                    throw new NotImplementedException();
-                }
 
-                public bool SendUnicastMessage<TData>(long addressee, string tag, TData data)
-                {
-                    throw new NotImplementedException();
-                }
-            }*/
+                public void GetBroadcastListeners(List<IMyBroadcastListener> broadcastListeners, Func<IMyBroadcastListener, bool> collect = null)=>OriginalIGC.GetBroadcastListeners(broadcastListeners, collect);
+
+                public IMyBroadcastListener RegisterBroadcastListener(string tag)=>OriginalIGC.RegisterBroadcastListener(tag);
+
+                public void SendBroadcastMessage<TData>(string tag, TData data, TransmissionDistance transmissionDistance = TransmissionDistance.AntennaRelay)=>OriginalIGC.SendBroadcastMessage<TData>(tag, data, transmissionDistance);
+
+                public bool SendUnicastMessage<TData>(long addressee, string tag, TData data) => OriginalIGC.SendUnicastMessage<TData>(addressee, tag, data);
+
+
+            }
         }
     }
 }

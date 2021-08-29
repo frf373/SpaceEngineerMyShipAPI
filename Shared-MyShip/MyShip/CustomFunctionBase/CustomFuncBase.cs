@@ -308,7 +308,7 @@ namespace IngameScript
                 FuncName = funcName;
                 this.UID = uid;
 
-                Runtime = new Custom_Runtime(program,this);
+                Runtime = new Custom_Runtime(this);
                 CustomEcho = new Custom_Echo(this);
                 Ini = new MyIni();
             }
