@@ -38,7 +38,8 @@
   <Import Project="MDK/MDK.options.props" />
   <Import Project="MDK/MDK.paths.props" Condition="exists('MDK/MDK.paths.props')" />
   <ItemGroup>
-    <Compile Include="CustomFunctionDev\AutoDoorFunc.cs" />
+    <Compile Include="CustomFunctionDev\AutoDoor\DoorSensorSystem.cs" />
+    <Compile Include="CustomFunctionDev\AutoDoor\AutoDoorFunc.cs" />
     <Compile Include="CustomFunctionDev\AutoTest.cs" />
     <Compile Include="CustomFunctionDev\TestFunc.cs" />
     <Compile Include="MDK\Bootstrapper.cs" />

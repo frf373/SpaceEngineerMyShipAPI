@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\IGCManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\EchoManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\FrequencyManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Ini.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_CustomData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Echo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncException.cs" />

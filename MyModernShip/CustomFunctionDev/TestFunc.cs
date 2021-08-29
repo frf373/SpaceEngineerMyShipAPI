@@ -27,6 +27,8 @@ namespace IngameScript
 
             public TestFunc(Program program,MyShip ship,string funcName,string uid):base(program,ship,funcName,uid)
             {
+                Ini.TryParse("123");
+                //MyIniKey myIniKey = new MyIniKey();
                 
             }
 

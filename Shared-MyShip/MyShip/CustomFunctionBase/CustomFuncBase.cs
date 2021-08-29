@@ -29,7 +29,7 @@ namespace IngameScript
             /// <summary>
             /// Ini配置读取类
             /// </summary>
-            MyIni Ini {  get; set; }
+            protected MyIni Ini {  get; set; }
 
             /// <summary>
             /// 数据分隔符,处于每条数据的结尾处
