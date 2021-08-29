@@ -10,12 +10,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)MyExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\CustomIGCArgBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\IGCManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\EchoManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\FrequencyManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Echo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_Runtime.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\Custom_IGC.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoDoorFunc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\AutoTest.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\FuncRunPermission.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\FuncRunPermission.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\DoorSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoLevel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\InfoSystem\InfoPanelSystem.cs" />
@@ -44,13 +48,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\Language.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\LanguageSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\BlockShowState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MyShip\RebootArg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MyShip\ShipSystems\RebootArg.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\CustomFuncManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionBase\CustomFuncBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MyShip\CustomFunctionDev\TestFunc.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)MyShip\LanguageSystem\" />
-    <Folder Include="$(MSBuildThisFileDirectory)MyShip\CustomFuncManager\" />
   </ItemGroup>
 </Project>

@@ -237,6 +237,9 @@ namespace IngameScript
             /// </summary>
             public Custom_Runtime Runtime { get; protected set; }
 
+            public Custom_IGC IGC {  get; set; }
+
+
             /// <summary>
             /// 自定义功能名称
             /// </summary>
@@ -311,6 +314,8 @@ namespace IngameScript
 
                 Runtime = new Custom_Runtime(this);
                 CustomEcho = new Custom_Echo(this);
+                IGC = new Custom_IGC(this);
+
                 Ini = new MyIni();
             }
 
@@ -348,11 +353,6 @@ namespace IngameScript
             {
                 throw new Exception($"[FuncName:{FuncName}][UID:{UID}]Exception:"+exceptionContent);
             }
-
-            /// <summary>
-            /// 注意除，CustomBase功能运行权限
-            /// </summary>
-            //public FuncRunPermission FuncState {  get; set; }
         }
     }
 }

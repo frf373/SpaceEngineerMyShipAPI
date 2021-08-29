@@ -27,42 +27,40 @@ namespace IngameScript
             /// <summary>
             /// 定义好转发规则的IGC系统
             /// </summary>
-            public class Custom_IGC
+            public class Custom_IGC:IMyIntergridCommunicationSystem
             {
                 private readonly CustomFuncBase func;
 
-                private IMyIntergridCommunicationSystem OriginalIGC => func.program.IGC;
+                private IMyIntergridCommunicationSystem IGC => func.program.IGC;
 
                 public Custom_IGC(CustomFuncBase func)
                 {
                     this.func = func;
                 }
 
-                public long Me => OriginalIGC.Me;
-                public IMyUnicastListener UnicastListener => OriginalIGC.UnicastListener;
+                public long Me => IGC.Me;
+                public IMyUnicastListener UnicastListener => IGC.UnicastListener;
+                public bool IsEndpointReachable(long address, TransmissionDistance transmissionDistance = TransmissionDistance.AntennaRelay) => IGC.IsEndpointReachable(address, transmissionDistance);
+                public void GetBroadcastListeners(List<IMyBroadcastListener> broadcastListeners, Func<IMyBroadcastListener, bool> collect = null)=>IGC.GetBroadcastListeners(broadcastListeners, collect);
 
-
-                public void GetBroadcastListeners(List<IMyBroadcastListener> broadcastListeners, Func<IMyBroadcastListener, bool> collect = null)=>OriginalIGC.GetBroadcastListeners(broadcastListeners, collect);
-
-                public bool SendUnicastMessage<TData>(long addressee, string tag, TData data) => OriginalIGC.SendUnicastMessage<TData>(addressee, tag, data);
+                public bool SendUnicastMessage<TData>(long addressee, string tag, TData data) => IGC.SendUnicastMessage<TData>(addressee, tag, data);
 
                 //改写部分
                 public IMyBroadcastListener RegisterBroadcastListener(string tag)
                 {
-                    IMyBroadcastListener listener= OriginalIGC.RegisterBroadcastListener(tag);
+                    IMyBroadcastListener listener= IGC.RegisterBroadcastListener(tag);
                     func.CustomFuncs.RegisterBroadcastListener(func, listener);
                     return listener;
                 }
                 
-                //改写部分
-                public void SendBroadcastMessage<TData>(string tag, TData data, TransmissionDistance transmissionDistance = TransmissionDistance.AntennaRelay)=>OriginalIGC.SendBroadcastMessage<TData>(tag, data, transmissionDistance);
+                public void SendBroadcastMessage<TData>(string tag, TData data, TransmissionDistance transmissionDistance = TransmissionDistance.AntennaRelay)=>IGC.SendBroadcastMessage<TData>(tag, data, transmissionDistance);
                 
                 //改写部分
-                public void DisableBroadcastListener(IMyBroadcastListener broadcastListener)
+                public void DisableBroadcastListener(IMyBroadcastListener listener)
                 {
-                    OriginalIGC.DisableBroadcastListener(broadcastListener);
+                    func.CustomFuncs.DisableBroadcastListener(listener);
+                    IGC.DisableBroadcastListener(listener);
                 }
-
 
             }
         }

@@ -28,14 +28,17 @@ namespace IngameScript
             /// 不运行的功能
             /// </summary>
             List<Action<string, UpdateType>> RunNoneActionList { get; set; }
+
             /// <summary>
             /// 只运行一次功能表
             /// </summary>
             List<Action<string, UpdateType>> RunOnceActionList { get; set; }
+
             /// <summary>
             /// 1tick运行一次功能表
             /// </summary>
             List<Action<string, UpdateType>> Run1ActionList { get; set; }
+
             /// <summary>
             /// 10tick运行一次功能表
             /// </summary>
@@ -50,15 +53,16 @@ namespace IngameScript
             /// 保存函数表
             /// </summary>
             List<Action> RunSaveActionList { get; set; }
+
+            /// <summary>
+            /// 应对Once->Once的频率变化，RunOnceActionList中不允许清空的Action
+            /// </summary>
+            List<Action<string, UpdateType>> RunOnceDeletedExceptions { get; set; }
+
             /// <summary>
             /// 标识符ID到自定函数类的哈希表，防止一个函数注册多次
             /// </summary>
             Hashtable UIDToFunc { get; set; }
-
-            /// <summary>
-            /// 更新频率到5种功能表的哈希表
-            /// </summary>
-            Hashtable UpdateFrencyToActionList { get; set; }
 
             /// <summary>
             /// 功能主函数到功能的哈希表
@@ -251,49 +255,6 @@ namespace IngameScript
             }
 
             /// <summary>
-            /// 注册有转发规则的广播监听
-            /// </summary>
-            /// <param name="func">广播监听所属功能类</param>
-            /// <param name="listener">广播监听</param>
-            public void RegisterBroadcastListener(CustomFuncBase func,IMyBroadcastListener listener)
-            {
-                FuncsListeners.Add(listener);
-                ListenerToFunc.Add(listener, func);
-            }
-
-            /// <summary>
-            /// 包含所有功能类中的所有广播监听的列表
-            /// </summary>
-            private List<IMyBroadcastListener> FuncsListeners { get; set; }
-
-            /// <summary>
-            /// 广播监听到自定义功能类
-            /// </summary>
-            private Hashtable ListenerToFunc {  get; set; }
-
-            /// <summary>
-            /// 处理IGC转发，找到转发对象
-            /// </summary>
-            /// <param name="arg">原参数</param>
-            public void HandleIGC(string arg)
-            {
-                string uid = "";
-                foreach(var listener in FuncsListeners)
-                {
-                    if (listener.HasPendingMessage)
-                    {
-                        uid=ListenerToFunc[listener] as string;
-                        break;
-                    }
-                }
-                if(uid.Length!=0)
-                {
-                    RunArgFunc(uid, arg, UpdateType.IGC);
-                }
-                
-            }
-
-            /// <summary>
             /// 对一个功能执行有参数的运行
             /// </summary>
             /// <param name="UID">功能16位字符串标识符(独一无二的)</param>
@@ -328,125 +289,6 @@ namespace IngameScript
                     }
                 }
             }
-
-            /// <summary>
-            /// 应对Once->Once的频率变化，RunOnceActionList中不允许清空的Action
-            /// </summary>
-            private List<Action<string,UpdateType>> RunOnceDeletedExceptions {  get; set; }
-
-            /// <summary>
-            /// 从缓存信息中更新功能运行频率，防止直接更新后破坏List的枚举器
-            /// </summary>
-            public void UpdateFuncFrequency()
-            {
-                if (FrequencyChangedInfoCaches.Count != 0)
-                {
-                    foreach (var cache in FrequencyChangedInfoCaches)
-                    {  
-                        //如果是不允许循环，则直接跳过，因为RunActionList中都没有
-                        if(Convert.ToBoolean(
-                            (FuncRunPermission)FuncToFuncRunPermission[(cache.sender as CustomFuncBase)] 
-                            & FuncRunPermission.Uncycled))
-                        {
-                            //如果是Once->Once，加入删除例外列表中
-                            if (cache.e.previous == UpdateFrequency.Once && cache.e.now == UpdateFrequency.Once)
-                            {
-                                RunOnceDeletedExceptions.Add((cache.sender as CustomFuncBase).Main);
-                            }
-                            //如果以前和现在一样，则跳过，节省时间
-                            if (cache.e.previous != cache.e.now)
-                            {////////////////////////////////////////////////Uncycle，不要剪
-                                CustomFuncBase customFunc = cache.sender as CustomFuncBase;
-                                Action<string, UpdateType> MainAction = (UIDToFunc[customFunc.UID] as CustomFuncBase).Main;
-                                (UpdateFrencyToActionList[cache.e.previous] as List<Action<string, UpdateType>>).Remove(MainAction);
-                                (UpdateFrencyToActionList[cache.e.now] as List<Action<string, UpdateType>>).Add(MainAction);
-                            }
-                        }
-                    }
-
-                    //清空缓存列表
-                    FrequencyChangedInfoCaches.Clear();
-                }
-
-                //如果运行一次没调整完全，手动调整，比如：Once->Update10会减少，但是如果Once没变化就要删除，要考虑Once->Once会放在例外列表中，不变化频率
-                if(RunOnceActionList.Count != 0)
-                {
-                    foreach (var action in RunOnceActionList)
-                    {
-                        //如果例外列表中为0，直接更新频率，加快速度
-                        if(RunOnceDeletedExceptions.Count==0||!RunOnceDeletedExceptions.Contains(action))
-                        {
-                            //手动调为None，此时会有更新频率变化的事件产生
-                            (FuncMainToFunc[action] as CustomFuncBase).Runtime.UpdateFrequency = UpdateFrequency.None;
-                        }
-                    }
-                    //清空例外
-                    RunOnceDeletedExceptions.Clear();
-                    //重新加载
-                    UpdateFuncFrequency();
-                }
-            }
-
-            /// <summary>
-            /// 函数更新频率信息缓存类。这是嵌套类，外界最好不要自己构造
-            /// </summary>
-            public class FrequencyChangedInfoCache
-            {
-                /// <summary>
-                /// 函数集合接口
-                /// </summary>
-                public CustomFuncManager customFuncs;
-
-                /// <summary>
-                /// 更新频率的功能函数
-                /// </summary>
-                public object sender;
-
-                /// <summary>
-                /// 更新后的频率事件参数
-                /// </summary>
-                public CustomFuncBase.UpdateFrequencyChangedEventArgs e;
-
-                /// <summary>
-                /// 函数更新频率信息缓存类构造函数
-                /// </summary>
-                /// <param name="customFuncs">函数集合接口，本类中调用填this就行</param>
-                /// <param name="sender">更新频率的功能函数</param>
-                /// <param name="e">更新后的频率事件参数</param>
-                public FrequencyChangedInfoCache(CustomFuncManager customFuncs, object sender, CustomFuncBase.UpdateFrequencyChangedEventArgs e)
-                {
-                    this.customFuncs = customFuncs;
-                    this.sender = sender;
-                    this.e = e;
-                }
-            }
-
-            /// <summary>
-            /// 函数更新频率更改缓存List
-            /// </summary>
-            private List<FrequencyChangedInfoCache> FrequencyChangedInfoCaches { get; set; }
-
-            /// <summary>
-            /// 功能函数更新频率改变处理函数
-            /// </summary>
-            /// <param name="sender">更新频率的功能函数</param>
-            /// <param name="e">更新后的频率事件参数</param>
-            public void FuncUpdateFrequencyChangedHandler(object sender, CustomFuncBase.UpdateFrequencyChangedEventArgs e)
-            {
-                //记录为缓存，不能直接更改函数频率，防止破坏List的枚举器
-                FrequencyChangedInfoCaches.Add(new FrequencyChangedInfoCache(this, sender, e));
-            }
-
-            public string GetAllEchoCache()
-            {
-                StringBuilder builder=new StringBuilder();
-                foreach(CustomFuncBase func in UIDToFunc.Values)
-                {
-                    builder.Append(func.CustomEcho.GetContent());
-                }
-                return builder.ToString();
-            }
-
         }
     }
 }
